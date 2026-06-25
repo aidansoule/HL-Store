@@ -20,3 +20,22 @@ function socialIconSvg(string $network): array
         'path' => $icons[$network] ?? '',
     ];
 }
+
+function renderSocialLinks(string $variant = 'mobile'): void
+{
+    global $socialLinks;
+
+    $class = 'social-links social-links--' . $variant;
+    echo '<ul class="' . escape($class) . '" aria-label="Social media">';
+
+    foreach ($socialLinks as $name => $url) {
+        $icon = socialIconSvg($name);
+        echo '<li>';
+        echo '<a href="' . escape($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . escape($name) . '">';
+        echo '<svg viewBox="' . escape($icon['viewBox']) . '" width="16" height="16" fill="currentColor" aria-hidden="true">' . $icon['path'] . '</svg>';
+        echo '</a>';
+        echo '</li>';
+    }
+
+    echo '</ul>';
+}

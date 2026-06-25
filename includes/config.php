@@ -8,26 +8,62 @@ define('SITE_URL', '/');
 define('CURRENT_YEAR', (int) date('Y'));
 define('MENU_PDF_URL', 'https://www.hungrylion.co.za/wp-content/uploads/2026/05/RSA-Downloadable.pdf');
 define('STORE_LOCATOR_URL', 'https://stores.hungrylion.co.za/');
+define('LEGAL_URL', 'https://www.hungrylion.co.za/legal/');
+define('FOOTER_CROWN_URL', 'https://www.hungrylion.co.za/wp-content/uploads/2025/05/HL_Crown-y.svg');
 
-$navLinks = [
-    'Stores' => [
-        ['label' => 'Find A Store', 'url' => 'find-store.php'],
-        ['label' => 'Delivery Partners', 'url' => 'delivery-partners.php'],
+$footerColumns = [
+    [
+        'sections' => [
+            [
+                'title' => 'Stores',
+                'links' => [
+                    ['label' => 'Find A Store', 'url' => STORE_LOCATOR_URL],
+                    ['label' => 'Delivery Partners', 'url' => 'delivery-partners.php'],
+                ],
+            ],
+            [
+                'title' => 'HUNGRY LION',
+                'links' => [
+                    ['label' => 'About', 'url' => 'about.php'],
+                    ['label' => 'Africa', 'url' => 'africa.php'],
+                ],
+                'spaced' => true,
+            ],
+        ],
     ],
-    'Hungry Lion' => [
-        ['label' => 'About', 'url' => 'about.php'],
-        ['label' => 'Africa', 'url' => 'africa.php'],
+    [
+        'sections' => [
+            [
+                'title' => 'Menu',
+                'links' => [
+                    ['label' => 'Our Menu', 'url' => 'menu.php'],
+                    ['label' => 'Daily Specials', 'url' => 'menu.php#anchordeals'],
+                ],
+            ],
+        ],
     ],
-    'Menu' => [
-        ['label' => 'Our Menu', 'url' => 'menu.php'],
-        ['label' => 'Daily Specials', 'url' => 'menu.php#daily-deals'],
+    [
+        'sections' => [
+            [
+                'title' => 'WORK FOR US',
+                'links' => [
+                    ['label' => 'General Workers', 'url' => 'job.php'],
+                    ['label' => 'HQ & Store Management', 'url' => 'https://hungrylion.applytojob.com/apply'],
+                ],
+            ],
+        ],
     ],
-    'Work For Us' => [
-        ['label' => 'General Workers', 'url' => 'careers.php#general'],
-        ['label' => 'HQ & Store Management', 'url' => 'careers.php#management'],
-    ],
-    'Stay In Touch' => [
-        ['label' => 'Contact Us', 'url' => 'contact.php'],
+    [
+        'sections' => [
+            [
+                'title' => 'STAY IN TOUCH',
+                'links' => [
+                    ['label' => 'Contact Us', 'url' => 'contact.php'],
+                ],
+            ],
+        ],
+        'showSocial' => true,
+        'modifier' => 'contact',
     ],
 ];
 
@@ -38,19 +74,19 @@ $mobileNavLinks = [
     ['label' => 'Donation Requests', 'url' => 'donation-request.php'],
     ['label' => 'About Us', 'url' => 'about.php'],
     ['label' => 'Africa', 'url' => 'africa.php'],
-    ['label' => 'Careers', 'url' => 'careers.php', 'children' => [
-        ['label' => 'General Workers', 'url' => 'careers.php#general'],
-        ['label' => 'HQ & Store Management', 'url' => 'careers.php#management'],
+    ['label' => 'Careers', 'url' => 'job.php', 'children' => [
+        ['label' => 'General Workers', 'url' => 'job.php'],
+        ['label' => 'HQ & Store Management', 'url' => 'https://hungrylion.applytojob.com/apply'],
     ]],
     ['label' => 'Contact Us', 'url' => 'contact.php'],
 ];
 
 $socialLinks = [
-    'Facebook' => 'https://www.facebook.com/HungryLionSA',
+    'Facebook' => 'https://www.facebook.com/hungrylion/',
     'Instagram' => 'https://www.instagram.com/hungrylionsa/',
-    'X' => 'https://twitter.com/HungryLionSA',
+    'X' => 'https://x.com/hungrylion',
     'TikTok' => 'https://www.tiktok.com/@hungrylionsa',
-    'LinkedIn' => 'https://www.linkedin.com/company/hungry-lion/',
+    'LinkedIn' => 'https://za.linkedin.com/company/hungrylion',
 ];
 
 function pageUrl(string $path): string

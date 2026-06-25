@@ -6,9 +6,54 @@ A PHP recreation of the [Hungry Lion](https://www.hungrylion.co.za/) fast-food r
 
 - PHP 8.0 or higher
 
-## Quick Start
+## Local Development with MAMP
 
-From the project root, start PHP's built-in development server:
+[MAMP](https://www.mamp.info/) is the recommended local setup on macOS.
+
+### Install (one time)
+
+From the project root:
+
+```bash
+./scripts/setup-mamp.sh
+```
+
+This script:
+
+- Symlinks the project into `/Applications/MAMP/htdocs/hl-store`
+- Configures Nginx for `hl-store.local` on port `8888`
+- Fixes a common Apache `mamp` user issue on fresh installs
+- Starts MAMP's Nginx + PHP servers
+- Adds `127.0.0.1 hl-store.local` to `/etc/hosts` (prompts for password)
+
+### Daily use
+
+Start the local servers:
+
+```bash
+./scripts/start-mamp.sh
+```
+
+Stop them when finished:
+
+```bash
+./scripts/stop-mamp.sh
+```
+
+### Open the site
+
+| URL | When to use |
+|-----|-------------|
+| [http://localhost:8888/hl-store/](http://localhost:8888/hl-store/) | Always works after `./scripts/start-mamp.sh` |
+| [http://hl-store.local:8888/](http://hl-store.local:8888/) | After hosts entry is added |
+
+No database is required — this is a static PHP frontend.
+
+**Note:** MAMP 7.x uses Nginx by default. If Apache fails to start, use the Nginx URLs above or run `./scripts/setup-mamp.sh` to apply the Apache user fix.
+
+## Quick Start (PHP built-in server)
+
+If you prefer not to use MAMP, start PHP's built-in development server from the project root:
 
 ```bash
 php -S localhost:8000

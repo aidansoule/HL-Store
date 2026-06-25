@@ -106,15 +106,6 @@
         });
     });
 
-    // Footer mobile accordion
-    document.querySelectorAll('.footer-mobile-nav__toggle').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const item = btn.closest('.footer-mobile-nav__item');
-            const isOpen = item.classList.toggle('is-open');
-            btn.setAttribute('aria-expanded', String(isOpen));
-        });
-    });
-
     // Hero slider
     function initSlider(container) {
         if (!container) return;
@@ -179,20 +170,23 @@
     initLazyBackgrounds('.menu-card[data-bg]', window.innerWidth <= 767 ? 2 : 3);
     initLazyBackgrounds('.careers-strip__inner[data-bg]', 0);
 
-    // Menu category carousel
+    // Menu category carousel (infinite loop)
     const menuCarousel = document.querySelector('[data-carousel]');
     if (menuCarousel) {
         const track = menuCarousel.querySelector('.menu-carousel__track');
         const viewport = menuCarousel.querySelector('.menu-carousel__viewport');
         const prevBtn = menuCarousel.querySelector('.menu-carousel__arrow--prev');
         const nextBtn = menuCarousel.querySelector('.menu-carousel__arrow--next');
-        const cards = track ? track.querySelectorAll('.menu-card') : [];
 
-        if (track && viewport && cards.length > 0) {
-            let offset = 0;
+        if (track && viewport) {
+            let originalCards = [];
+            let currentIndex = 0;
+            let cloneCount = 0;
+            let step = 0;
+            let isAnimating = false;
+            let resizeTimer = null;
 
             function getVisibleCount() {
-                if (window.innerWidth <= 767) return 2;
                 if (window.innerWidth <= 1024) return 2;
                 return 3;
             }
@@ -208,55 +202,157 @@
                 return (viewport.clientWidth - gap * (visible - 1)) / visible;
             }
 
-            function maxOffset() {
-                return Math.max(0, cards.length - getVisibleCount());
+            function allCards() {
+                return track.querySelectorAll('.menu-card');
             }
 
-            function update() {
+            function canLoop() {
+                return originalCards.length > getVisibleCount();
+            }
+
+            function cloneCard(card) {
+                const clone = card.cloneNode(true);
+                clone.classList.add('menu-card--clone');
+                clone.setAttribute('aria-hidden', 'true');
+                clone.setAttribute('tabindex', '-1');
+
+                if (card.classList.contains('is-bg-loaded')) {
+                    clone.classList.add('is-bg-loaded');
+                    if (card.style.getPropertyValue('--card-bg')) {
+                        clone.style.setProperty('--card-bg', card.style.getPropertyValue('--card-bg'));
+                    }
+                }
+
+                return clone;
+            }
+
+            function clearClones() {
+                track.querySelectorAll('.menu-card--clone').forEach(function (clone) {
+                    clone.remove();
+                });
+            }
+
+            function setupClones() {
+                clearClones();
+                originalCards = Array.from(track.querySelectorAll('.menu-card:not(.menu-card--clone)'));
+                cloneCount = getVisibleCount();
+
+                if (!canLoop()) {
+                    currentIndex = 0;
+                    return;
+                }
+
+                const firstClones = originalCards.slice(0, cloneCount).map(cloneCard);
+                const lastClones = originalCards.slice(-cloneCount).map(cloneCard);
+
+                lastClones.reverse().forEach(function (clone) {
+                    track.insertBefore(clone, track.firstChild);
+                });
+                firstClones.forEach(function (clone) {
+                    track.appendChild(clone);
+                });
+
+                currentIndex = cloneCount;
+                initLazyBackgrounds('.menu-card--clone[data-bg]:not(.is-bg-loaded)', 0);
+            }
+
+            function applyTransform(animate) {
+                const cards = allCards();
                 const gap = getGap();
                 const width = cardWidth();
+
+                step = width + gap;
                 track.style.gap = gap + 'px';
                 cards.forEach(function (card) {
                     card.style.flexBasis = width + 'px';
                     card.style.maxWidth = width + 'px';
                 });
-                track.style.transform = 'translateX(-' + (offset * (width + gap)) + 'px)';
+
+                if (animate) {
+                    track.style.transition = '';
+                    isAnimating = true;
+                } else {
+                    track.style.transition = 'none';
+                }
+
+                track.style.transform = 'translateX(-' + (currentIndex * step) + 'px)';
+
+                if (!animate) {
+                    track.offsetHeight;
+                    track.style.transition = '';
+                    isAnimating = false;
+                }
             }
+
+            function normalizePosition() {
+                if (!canLoop()) return;
+
+                if (currentIndex >= cloneCount + originalCards.length) {
+                    currentIndex = cloneCount;
+                    applyTransform(false);
+                } else if (currentIndex < cloneCount) {
+                    currentIndex = cloneCount + originalCards.length - getVisibleCount();
+                    applyTransform(false);
+                }
+            }
+
+            function moveBy(delta) {
+                if (isAnimating) return;
+
+                if (!canLoop()) {
+                    const maxOffset = Math.max(0, originalCards.length - getVisibleCount());
+                    currentIndex = Math.max(0, Math.min(maxOffset, currentIndex + delta));
+                    applyTransform(true);
+                    return;
+                }
+
+                currentIndex += delta;
+                applyTransform(true);
+            }
+
+            track.addEventListener('transitionend', function (event) {
+                if (event.target !== track || event.propertyName !== 'transform') return;
+                isAnimating = false;
+                normalizePosition();
+            });
 
             if (prevBtn) {
                 prevBtn.addEventListener('click', function () {
-                    offset = Math.max(0, offset - 1);
-                    update();
+                    moveBy(-1);
                 });
             }
 
             if (nextBtn) {
                 nextBtn.addEventListener('click', function () {
-                    offset = Math.min(maxOffset(), offset + 1);
-                    update();
+                    moveBy(1);
                 });
             }
 
             window.addEventListener('resize', function () {
-                offset = Math.min(offset, maxOffset());
-                update();
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    setupClones();
+                    applyTransform(false);
+                }, 150);
             });
 
-            update();
+            setupClones();
+            applyTransform(false);
         }
     }
 
     // Menu page nav highlight
-    const menuNav = document.querySelector('.menu-nav');
+    const menuNav = document.querySelector('.menu-page-nav');
     if (menuNav) {
-        const sections = document.querySelectorAll('.menu-section');
-        const navLinks = menuNav.querySelectorAll('.menu-nav__link');
+        const sections = document.querySelectorAll('.menu-page-section');
+        const navLinks = menuNav.querySelectorAll('.menu-page-nav__link');
 
         function updateActiveNav() {
             let current = '';
+            const offset = (document.querySelector('.site-header')?.offsetHeight || 0) + menuNav.offsetHeight + 20;
             sections.forEach(function (section) {
-                if (window.scrollY >= section.offsetTop - 150) {
-                    current = section.getAttribute('id');
+                if (window.scrollY >= section.offsetTop - offset) {
+                    current = section.getAttribute('id') || '';
                 }
             });
             navLinks.forEach(function (link) {

@@ -21,9 +21,9 @@ $bodyClass = $bodyClass ?? '';
     <link rel="preload" href="assets/fonts/Block-Berthold-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"></noscript>
-    <link rel="stylesheet" href="assets/css/style.css?v=19">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;900&display=swap"></noscript>
+    <link rel="stylesheet" href="assets/css/style.css?v=39">
     <link rel="icon" href="assets/images/favicon.png" sizes="32x32">
 </head>
 <body class="<?= escape($bodyClass) ?>">

@@ -3,45 +3,56 @@
 declare(strict_types=1);
 
 $pageTitle = 'Africa';
-$pageDescription = 'Hungry Lion operates across 9 African countries with over 500 stores.';
+$pageDescription = 'Hungry Lion operates across Angola, Botswana, Eswatini, Lesotho, Mauritius, Namibia, South Africa, Zambia, and Zimbabwe.';
 $bodyClass = 'page-africa';
 
 $countries = [
-    ['name' => 'South Africa', 'flag' => '🇿🇦', 'since' => '1997', 'stores' => '300+'],
-    ['name' => 'Zambia', 'flag' => '🇿🇲', 'since' => '1997', 'stores' => '80+'],
-    ['name' => 'Namibia', 'flag' => '🇳🇦', 'since' => '1998', 'stores' => '40+'],
-    ['name' => 'Botswana', 'flag' => '🇧🇼', 'since' => '1999', 'stores' => '25+'],
-    ['name' => 'Eswatini', 'flag' => '🇸🇿', 'since' => '1999', 'stores' => '15+'],
-    ['name' => 'Angola', 'flag' => '🇦🇴', 'since' => '2010', 'stores' => '20+'],
-    ['name' => 'Lesotho', 'flag' => '🇱🇸', 'since' => '2024', 'stores' => '5+'],
-    ['name' => 'Zimbabwe', 'flag' => '🇿🇼', 'since' => '2025', 'stores' => '10+'],
-    ['name' => 'Mauritius', 'flag' => '🇲🇺', 'since' => '2025', 'stores' => '5+'],
+    ['name' => 'Angola', 'url' => 'https://hungrylion.co.ao/'],
+    ['name' => 'Botswana', 'url' => 'https://hungrylion.co.bw/'],
+    ['name' => 'Eswatini', 'url' => 'http://hungrylion.africa'],
+    ['name' => 'Lesotho', 'url' => 'https://hungrylion.co.ls/'],
+    ['name' => 'Mauritius', 'url' => 'https://hungrylion.co.mu/'],
+    ['name' => 'Namibia', 'url' => 'https://hungrylion.co.na/'],
+    ['name' => 'South Africa', 'url' => 'https://www.hungrylion.co.za/'],
+    ['name' => 'Zambia', 'url' => 'https://hungrylion.co.zm/'],
+    ['name' => 'Zimbabwe', 'url' => 'https://hungrylion.co.zw/'],
 ];
+
+$africaMapImage = 'https://www.hungrylion.co.za/wp-content/uploads/2025/06/Africa.png';
 
 require_once __DIR__ . '/includes/config.php';
 require __DIR__ . '/includes/header.php';
 ?>
 
-<section class="page-hero">
-    <div class="container">
-        <h1 class="page-hero__title">Hungry Lion in Africa</h1>
-        <p class="page-hero__subtitle">Proudly African, serving communities across the continent</p>
-    </div>
-</section>
+<section class="africa-page">
+    <div class="africa-page__inner">
+        <div class="africa-page__countries">
+            <ul class="africa-page__list">
+                <?php foreach ($countries as $country): ?>
+                <li>
+                    <a href="<?= escape($country['url']) ?>" target="_blank" rel="noopener noreferrer">
+                        <span class="africa-page__icon" aria-hidden="true">
+                            <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"/>
+                            </svg>
+                        </span>
+                        <span class="africa-page__label"><?= escape($country['name']) ?></span>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
 
-<section class="section">
-    <div class="container">
-        <p class="lead text-center">From a single store in Stellenbosch in 1997, Hungry Lion has grown into Africa's fastest-growing fried chicken brand, with a presence in nine countries and counting.</p>
-
-        <div class="country-grid">
-            <?php foreach ($countries as $country): ?>
-            <article class="country-card">
-                <span class="country-card__flag" aria-hidden="true"><?= $country['flag'] ?></span>
-                <h2 class="country-card__name"><?= escape($country['name']) ?></h2>
-                <p class="country-card__meta">Since <?= escape($country['since']) ?></p>
-                <p class="country-card__stores"><?= escape($country['stores']) ?> stores</p>
-            </article>
-            <?php endforeach; ?>
+        <div class="africa-page__map">
+            <img
+                src="<?= escape($africaMapImage) ?>"
+                alt="Map of Africa showing Hungry Lion countries"
+                width="800"
+                height="800"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+            >
         </div>
     </div>
 </section>

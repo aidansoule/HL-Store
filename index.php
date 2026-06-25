@@ -66,12 +66,15 @@ require __DIR__ . '/includes/header.php';
                 <div class="menu-carousel__track">
                     <?php foreach ($menuCategories as $category): ?>
                     <a
-                        href="menu.php#<?= escape($category['id']) ?>"
-                        class="menu-card"
+                        href="menu.php#<?= escape($category['anchor'] ?? $category['id']) ?>"
+                        class="menu-card<?= !empty($category['image_only']) ? ' menu-card--image-only' : '' ?>"
                         data-bg="<?= escape($category['image']) ?>"
                         style="--card-radius: <?= (int) ($category['radius'] ?? 10) ?>px; --card-position: <?= escape($category['position'] ?? 'center') ?>;"
+                        <?= !empty($category['image_only']) ? 'aria-label="' . escape($category['title']) . '"' : '' ?>
                     >
+                        <?php if (empty($category['image_only'])): ?>
                         <h3 class="menu-card__title"><?= $category['title_html'] ?></h3>
+                        <?php endif; ?>
                     </a>
                     <?php endforeach; ?>
                 </div>
@@ -87,8 +90,8 @@ require __DIR__ . '/includes/header.php';
 <section class="careers-strip">
     <div class="container">
         <div class="careers-strip__inner" data-bg="<?= escape($careersBanner['image']) ?>">
-            <h2 class="careers-strip__title"><a href="careers.php">Join Our<br>Team</a></h2>
-            <a href="careers.php" class="btn btn--red btn--cta btn--careers">View Careers</a>
+            <h2 class="careers-strip__title"><a href="job.php">JOIN OUR<br>TEAM</a></h2>
+            <a href="job.php" class="btn btn--red btn--cta btn--careers">Click here</a>
         </div>
     </div>
 </section>
